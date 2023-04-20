@@ -2,12 +2,26 @@ import requests
 from bs4 import BeautifulSoup
 import sqlite3
 import os
+import csv
+import datetime
 class Verge:
     def __init__(self):
         self.conn = sqlite3.connect("mydatabase.db")
-        self.conn.execute('''CREATE TABLE articles (id INTEGER PRIMARY KEY AUTOINCREMENT,url TEXT,headline TEXT,author TEXT,date TEXT)''')    
+        # self.conn.execute('''CREATE TABLE articles (id INTEGER PRIMARY KEY AUTOINCREMENT,url TEXT,headline TEXT,author TEXT,date TEXT)''')    
         self.response = requests.get('https://www.theverge.com')    
         self.url='https://www.theverge.com'
+    def put_all_details_csv(self, all_details):
+        now = datetime.datetime.now()
+        date_str = now.strftime("%d_%m_%Y")
+        file_name = date_str + "_verge.csv"
+
+        with open(file_name, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['URL', 'Headline', 'Author', 'Date'])
+            for l in all_details:
+                writer.writerow([l['url'], l['headline'], l['author'], l['date']])
+        return "YOUR DATA ADDED SUCCESSFULLY"
+            
     def fetch_all_details_using_links(self,links):
         all_details=[]
         for link in links:
@@ -51,6 +65,7 @@ class Verge:
             links.append(url_links)
         all_details=[]
         all_details=self.fetch_all_details_using_links(links)
+        print(self.put_all_details_csv(all_details))
         print(self.put_all_details_database(all_details))
 if __name__=="__main__":
     obj=Verge()
