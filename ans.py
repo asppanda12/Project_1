@@ -10,6 +10,7 @@ class Verge:
         # self.conn.execute('''CREATE TABLE articles (id INTEGER PRIMARY KEY AUTOINCREMENT,url TEXT,headline TEXT,author TEXT,date TEXT)''')    
         self.response = requests.get('https://www.theverge.com')    
         self.url='https://www.theverge.com'
+        
     def put_all_details_csv(self, all_details):
         now = datetime.datetime.now()
         date_str = now.strftime("%d_%m_%Y")
